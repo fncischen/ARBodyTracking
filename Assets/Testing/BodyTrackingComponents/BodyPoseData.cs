@@ -71,25 +71,10 @@ public class BodyPartGroup
 public class BodyPoseData : ScriptableObject
 {
 
-    public delegate void OnRotationCriteriaMet();
-    public OnRotationCriteriaMet onRotationCriteriaMet;
-
-    [SerializeField]
-    public CharacterEvent characterEvent; 
-
     [SerializeField]
     public BodyPartGroup[] bodyPartGroups;
 
-    public void subscribeToCharacterEvent()
-    {
-        onRotationCriteriaMet += characterEvent.TriggerCharacterEvent;
-    }
-
-    public void unsubscribeToCharacterEvent()
-    {
-        onRotationCriteriaMet -= characterEvent.TriggerCharacterEvent;
-
-    }
+    
 
 }
 

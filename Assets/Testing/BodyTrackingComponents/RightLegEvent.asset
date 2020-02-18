@@ -10,27 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41177c84e956444879bc065d1886debe, type: 3}
-  m_Name: FlameThrower
+  m_Name: RightLegEvent
   m_EditorClassIdentifier: 
-  characterEvent: {fileID: 11400000, guid: c700ef08b2c57424eb0bd07f15117a36, type: 2}
   bodyPartGroups:
-  - bodyPart: 0
+  - bodyPart: 5
     isLocalRotationX: 0
     minLocalRotationX: 0
     maxLocalRotationX: 0
     isLocalRotationY: 0
     minLocalRotationY: 0
     maxLocalRotationY: 0
-    isLocalRotationZ: 0
-    minLocalRotationZ: 0
-    maxLocalRotationZ: 0
-  - bodyPart: 0
-    isLocalRotationX: 0
-    minLocalRotationX: 0
-    maxLocalRotationX: 0
-    isLocalRotationY: 0
-    minLocalRotationY: 0
-    maxLocalRotationY: 0
-    isLocalRotationZ: 0
-    minLocalRotationZ: 0
-    maxLocalRotationZ: 0
+    isLocalRotationZ: 1
+    minLocalRotationZ: -5
+    maxLocalRotationZ: 95

@@ -1,7 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.VFX;
 using System;
+
+[Serializable]
+public class BodyPoseEvent {
+    public BodyPoseData bodyPoseData;
+    public VisualEffect visualEffect;
+    public bool isVisualEffectPlaying = false; 
+}
 
 
 public class BodyPoseManager : MonoBehaviour
@@ -9,35 +17,17 @@ public class BodyPoseManager : MonoBehaviour
     public BoneController boneController;
 
     [SerializeField]
-    public BodyPoseData[] bodyPoseDataGroups;
+    public BodyPoseEvent[] bodyPoseEvents;
 
     public void OnEnable()
     {
-        SubscribeToBodyEvents();
     }
 
     public void OnDisable()
     {
-        UnSubscribeToBodyEvents();
     }
 
     // the goal is to get the transform at a certain event 
-
-    public void SubscribeToBodyEvents()
-    {
-        foreach(BodyPoseData bpd in bodyPoseDataGroups)
-        {
-            bpd.subscribeToCharacterEvent();
-        }
-    }
-
-    public void UnSubscribeToBodyEvents()
-    {
-        foreach (BodyPoseData bpd in bodyPoseDataGroups)
-        {
-            bpd.unsubscribeToCharacterEvent();
-        }
-    }
 
     public void Update()
     {
@@ -47,14 +37,15 @@ public class BodyPoseManager : MonoBehaviour
     public void checkBodyTrackers()
     {
         // loop through each body tracker
-        foreach(BodyPoseData bpd in bodyPoseDataGroups)
+        foreach (BodyPoseEvent bpe in bodyPoseEvents)
         {
+            BodyPoseData bpd = bpe.bodyPoseData;
             BodyPartGroup[] bpgs = bpd.bodyPartGroups;
 
             // loop through each bodyPartGroup and retrieve all relevant ranges
-            bool meetsCriteria = true; 
+            bool meetsCriteria = true;
             // check if the bodytrackers are within this rotation
-            foreach(BodyPartGroup bpg in bpgs)
+            foreach (BodyPartGroup bpg in bpgs)
             {
                 String bodyPartName = bpg.bodyPart.ToString();// get the enum type
 
@@ -67,7 +58,7 @@ public class BodyPoseManager : MonoBehaviour
 
                 if (bpg.isLocalRotationX)
                 {
-                   if (currentRotation.eulerAngles.x < bpg.minLocalRotationX || currentRotation.eulerAngles.x > bpg.maxLocalRotationX)
+                    if (currentRotation.eulerAngles.x < bpg.minLocalRotationX || currentRotation.eulerAngles.x > bpg.maxLocalRotationX)
                     {
                         meetsCriteria = false;
                         break;
@@ -82,7 +73,7 @@ public class BodyPoseManager : MonoBehaviour
                     if (currentRotation.eulerAngles.y < bpg.minLocalRotationY || currentRotation.eulerAngles.y > bpg.maxLocalRotationY)
                     {
                         meetsCriteria = false;
-                        break; 
+                        break;
                     }
 
                 }
@@ -103,14 +94,26 @@ public class BodyPoseManager : MonoBehaviour
 
             }
 
-            if (meetsCriteria)
+
+            // 
+
+            if (meetsCriteria & !bpe.isVisualEffectPlaying)
             {
-                Debug.Log("Meets criteria!");
-                bpd.onRotationCriteriaMet?.Invoke();
+                Debug.Log(bpe.bodyPoseData.name +  " Meets criteria!");
+                bpe.isVisualEffectPlaying = true; 
+                bpe.visualEffect.Play();
                 // send the event to the appropriate character event attached to the bodyposeData 
             }
 
+            else if (!meetsCriteria & bpe.isVisualEffectPlaying)
+            {
+                Debug.Log(bpe.bodyPoseData.name + "Does Not Meets criteria!");
+                bpe.isVisualEffectPlaying = false; 
+                bpe.visualEffect.Stop();
+            }
+
         }
+
     }
 
     private void BoneFromBodyPart(String boneName, out Transform bone)
