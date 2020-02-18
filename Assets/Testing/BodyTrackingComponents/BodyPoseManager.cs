@@ -52,7 +52,7 @@ public class BodyPoseManager : MonoBehaviour
                 // search for the Bone from the BoneController
                 Transform bodyPart;
                 BoneFromBodyPart(bodyPartName, out bodyPart);
-                // Debug.Log(bodyPart);
+                //Debug.Log(bodyPart);
                 Quaternion currentRotation = bodyPart.localRotation;
                 Debug.Log("Angle at " + bodyPartName + " " + currentRotation.eulerAngles);
 
@@ -95,7 +95,8 @@ public class BodyPoseManager : MonoBehaviour
             }
 
 
-            // 
+            //
+            Debug.Log(bpe.bodyPoseData.name + " this meets criteria"  + meetsCriteria);
 
             if (meetsCriteria & !bpe.isVisualEffectPlaying)
             {
@@ -107,9 +108,13 @@ public class BodyPoseManager : MonoBehaviour
 
             else if (!meetsCriteria & bpe.isVisualEffectPlaying)
             {
-                Debug.Log(bpe.bodyPoseData.name + "Does Not Meets criteria!");
+                Debug.Log(bpe.bodyPoseData.name + "will stop playing!");
                 bpe.isVisualEffectPlaying = false; 
                 bpe.visualEffect.Stop();
+            }
+            else
+            {
+                Debug.Log(bpe.bodyPoseData.name + "VFX will not play");
             }
 
         }
